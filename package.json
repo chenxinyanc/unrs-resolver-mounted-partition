@@ -1,7 +1,11 @@
 {
   "name": "unrs-resolver-mounted-partition",
   "packageManager": "yarn@4.9.1",
+  "type": "module",
   "dependencies": {
     "unrs-resolver": "^1.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1"
   }
 }
