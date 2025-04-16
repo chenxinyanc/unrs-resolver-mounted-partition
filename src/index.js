@@ -1,14 +1,22 @@
+// @ts-check
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { ResolverFactory } from "unrs-resolver";
+import * as UnrsResolver from "unrs-resolver";
+import * as OxcResolver from "oxc-resolver";
 
-const resolver = new ResolverFactory({
+const dir = path.resolve(fileURLToPath(import.meta.url), '..');
+console.log("Current directory: ", dir);
+
+const unrsResolver = new UnrsResolver.ResolverFactory({
   tsconfig: {
-    configFile: 'tsconfig.json',
+    configFile: path.resolve(dir, 'tsconfig.json'),
   },
 });
-const dir = path.resolve(fileURLToPath(import.meta.url), '..');
-console.log("dir: ", dir);
+const oxcResolver = new OxcResolver.ResolverFactory({
+  tsconfig: {
+    configFile: path.resolve(dir, 'tsconfig.json'),
+  },
+});
 
-const resolved = resolver.sync(dir, './mount-root/foo.ts');
-console.log(resolved);
+console.log("unrs-resolver:", unrsResolver.sync(dir, './mount-root/foo.ts'));
+console.log("oxc-resolver:", oxcResolver.sync(dir, './mount-root/foo.ts'));

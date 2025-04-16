@@ -1,6 +1,6 @@
 # unrs-resolver-mounted-partition
 
-This repo demonstrates the issue that the path resolved from `unrs-resolver` can contain unexpected segments
+This repo demonstrates the issue that the path resolved from `unrs-resolver` / `oxc-resolver` can contain unexpected segments
 if the target module is inside a ["Mounted Volume"](https://learn.microsoft.com/en-us/windows-server/storage/disk-management/assign-a-mount-point-folder-path-to-a-drive).
 
 ## Prerequsite
@@ -26,22 +26,28 @@ with Disk Management. I have not tested yet but you might need to make sure ther
 
 ## Reproduction
 
-In the `src` folder, run the following command to reproduce
+Run the following command to reproduce
 
 ```powershell
-PS \unrs-resolver-mounted-partition\src> node index.js
+PS \unrs-resolver-mounted-partition\src> yarn run start
 ```
 
 Actual output was
 ```js
-{
-  path: '...\\unrs-resolver-mounted-partition\\src\\Volume{<G-U-I-D>}\\foo.ts',
+Current directory:  D:\test\unrs-resolver-mounted-partition\src
+unrs-resolver: {
+  path: 'D:\\test\\unrs-resolver-mounted-partition\\src\\Volume{<G-U-I-D>}\\foo.ts',
   moduleType: 'module',
-  packageJsonPath: '...\\unrs-resolver-mounted-partition\\package.json'
+  packageJsonPath: 'D:\\test\\unrs-resolver-mounted-partition\\package.json'
+}
+oxc-resolver: {
+  path: 'D:\\test\\unrs-resolver-mounted-partition\\src\\Volume{<G-U-I-D>}\\foo.ts',
+  moduleType: 'module',
+  packageJsonPath: 'D:\\test\\unrs-resolver-mounted-partition\\package.json'
 }
 ```
 
-While `unrs-resolver` can locate the `foo.ts` you've just created, the `Volume{<G-U-I-D>}` part is incorrect.
+While `unrs-resolver` / `oxc-resolver` can locate the `foo.ts` you've just created, the `Volume{<G-U-I-D>}` part is incorrect.
 There is no actual folder named `"Volume{<G-U-I-D>}"` under `src`.
 Instead, we expect something like
 ```js
